@@ -1,0 +1,44 @@
+- name: libselinux-python install
+  yum: name=libselinux-python state=installed
+
+- name: epel add
+  yum: name={{ item }}
+  with_items:
+    - http://ftp-srv2.kddilabs.jp/Linux/distributions/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+    - http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+    - http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+
+- name: enabled 
+  replace: dest=/etc/yum.repos.d/{{item}} regexp="enabled *= *1" replace="enabled=0"
+  with_items:
+    - epel.repo
+    - rpmforge.repo
+    - remi.repo
+
+- name: libmcrypt install
+  yum: name=libmcrypt-devel state=latest enablerepo=epel
+
+- name: install base
+  yum: name={{ item }} state=latest
+  with_items:
+    - wget
+    - vim
+    - gcc
+    - httpd
+    - httpd-devel
+    - libxml2
+    - libxml2-devel
+    - curl-devel
+    - libmcrypt-devel
+    - readline-devel
+    - libxslt-devel
+    - giflib-devel
+    - openssl
+    - openssl-devel
+    - openssh-clients
+
+- name: set timezone Asia/Tokyo
+  replace: dest=/etc/sysconfig/clock regexp='^ZONE=.*' replace='ZONE="Asia/Tokyo"'
+
+- name: selinux off
+  selinux: state=disabled

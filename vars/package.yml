@@ -1,0 +1,11 @@
+php_packages: [
+  "php-pear",
+  "php-gd",
+  "php-mbstring",
+  "php-pdo",
+  "php-snmp",
+  "php-devel",
+  "php-process",
+  "php-fpm",
+  "php-mcrypt"
+]
