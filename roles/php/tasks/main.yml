@@ -1,6 +1,3 @@
-- name: pecl install
-  yum: name=php-pear state=latest enablerepo=remi-php56
-
 - name: install php
   yum: name=php state=present enablerepo=remi-php56
 

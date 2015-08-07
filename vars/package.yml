@@ -1,5 +1,4 @@
 php_packages: [
-  "php-pear",
   "php-gd",
   "php-mbstring",
   "php-pdo",
@@ -7,5 +6,6 @@ php_packages: [
   "php-devel",
   "php-process",
   "php-fpm",
+  "php-pear",
   "php-mcrypt"
 ]
