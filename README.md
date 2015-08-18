@@ -4,7 +4,7 @@
 
 -
 
-easy setup nginx/php/mysql application
+easy setup nginx/php/mysql/redis application
 
 
 ### Installation
