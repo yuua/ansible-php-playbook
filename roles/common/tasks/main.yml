@@ -16,10 +16,10 @@
     - remi.repo
 
 - name: libmcrypt install
-  yum: name=libmcrypt-devel state=latest enablerepo=epel
+  yum: name=libmcrypt-devel state=installed enablerepo=epel
 
 - name: install base
-  yum: name={{ item }} state=latest
+  yum: name={{ item }} state=installed
   with_items:
     - wget
     - vim
