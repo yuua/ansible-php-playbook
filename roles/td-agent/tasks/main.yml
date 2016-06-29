@@ -28,8 +28,5 @@
 - name: td-agent.conf inline adding
   lineinfile: dest=/etc/td-agent/td-agent.conf line="include conf.d/*.conf" backup=yes
 
-- name: kpi conf upload
-  template: src=kpi-agent.conf.j2 dest=/etc/td-agent/config.d/kpi-agent.conf owner=root group=root
-
 - name: start td-agent
   service: name=td-agent state=started enabled=yes
