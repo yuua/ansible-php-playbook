@@ -1,6 +1,21 @@
-- name: composer install
-  shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
+- name: check installer
+  stat: path=/tmp/installer
+  register: composer_installer
+
+- name: get composer installer
+  get_url: url=https://getcomposer.org/installer dest=/tmp/installer
+
+- name: install composer
+  shell: "php /tmp/installer --install-dir=/usr/bin"
+  when: not composer_installer.stat.exists
+
 - name: move composer.phar to composer
   command: mv /usr/bin/composer.phar /usr/bin/composer
+  when: not composer_installer.stat.exists
+
+- name: remove composer installer
+  file: path=/tmp/installer state=absent
+  when: composer_installer.stat.exists
+
 - name: laravel install global
   shell: composer global require "laravel/installer=~1.1"

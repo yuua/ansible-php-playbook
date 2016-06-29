@@ -1,12 +1,22 @@
 - name: install php
-  yum: name=php state=present enablerepo=remi-php56
+  yum: name=php state=present enablerepo=remi-php70
 
 - name: install php package
-  yum: name={{ item }} state=present enablerepo=remi,remi-php56
-  with_items: php_packages
+  yum: name={{ item }} state=present enablerepo=epel,remi,remi-php70
+  with_items: "{{ php_packages }}"
+
+- name: install msgpack
+  become: yes
+  shell: "pecl install channel://pecl.php.net/msgpack-2.0.1"
 
 - name: php-fpm conf apache to nginx replace
   replace: dest=/etc/php-fpm.d/www.conf regexp='apache' replace='nginx' backup=yes
 
+- name: extension mespack.so adding
+  lineinfile: dest=/etc/php.ini line="extension=msgpack.so" backup=yes
+
 - name: start php-fpm
   service: name=php-fpm state=started enabled=yes
+
+- name: php info adding
+  template: src=index.php.j2 dest=/var/www/index.php

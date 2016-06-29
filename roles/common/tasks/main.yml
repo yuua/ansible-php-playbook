@@ -24,6 +24,7 @@
     - wget
     - vim
     - gcc
+    - make
     - httpd
     - httpd-devel
     - libxml2
@@ -36,6 +37,9 @@
     - openssl
     - openssl-devel
     - openssh-clients
+    - readline
+    - readline-devel
+    - unzip
 
 - name: set timezone Asia/Tokyo
   replace: dest=/etc/sysconfig/clock regexp='^ZONE=.*' replace='ZONE="Asia/Tokyo"'

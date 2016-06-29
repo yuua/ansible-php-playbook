@@ -1,0 +1,45 @@
+- name: check shell
+  stat: path=/etc/profile.d/rbenv.sh
+  register: rbenv_sh
+
+- name: sudoers set
+  become: yes
+  template: src=00_base.j2 dest=/etc/sudoers.d/00_base
+  when: not rbenv_sh.stat.exists
+
+- name: profile.d ruby-add
+  template: src=rbenv.sh.j2 dest=/etc/profile.d/rbenv.sh
+  when: not rbenv_sh.stat.exists
+
+- name: install rbenv
+  become: yes
+  git: repo=https://github.com/sstephenson/rbenv.git dest=/usr/local/rbenv
+  when: not rbenv_sh.stat.exists
+
+- name: install ruby-build
+  become: yes
+  git: repo=https://github.com/sstephenson/ruby-build.git dest=/usr/local/rbenv/plugins/ruby-build
+  when: not rbenv_sh.stat.exists
+
+- name: rbenv init
+  become: yes
+  shell: "rbenv init -"
+
+# - name: shell restart
+#   async: 5
+#   poll: 0
+#   shell: "exec ${SHELL} -l"
+
+- name: check ruby version
+  shell: /bin/bash -lc "rbenv versions | grep {{ ruby_version }}"
+  register: ruby_installed
+  failed_when: ruby_installed.rc not in [0,1]
+
+- name: install ruby
+  shell: /bin/bash -lc "rbenv install {{ ruby_version }} && rbenv rehash && rbenv global {{ ruby_version }}"
+  when: ruby_installed|failed
+
+- name: install bundler
+  shell: /bin/bash -lc "gem install bundler && rbenv rehash"
+  when: ruby_installed|failed
+

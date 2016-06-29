@@ -1,0 +1,35 @@
+- name: check-fluentd
+  stat: path=/usr/sbin/td-agent
+  register: tdagent
+
+- name: get td-agent installer
+  get_url: url=https://toolbelt.treasuredata.com/sh/install-redhat-td-agent2.sh dest=/tmp/install-redhat-td-agent2.sh
+  when: not tdagent.stat.exists
+
+- name: install td-agent
+  shell: "sh /tmp/install-redhat-td-agent2.sh"
+  when: not tdagent.stat.exists
+
+- name: installer remove
+  file: path=/tmp/install-redhat-td-agent2.sh state=absent
+  when: not tdagent.stat.exists
+
+- name: replace td-agent user
+  replace: dest=/etc/init.d/td-agent regexp="TD_AGENT_USER=td-agent" replace="TD_AGENT_USER=root" backup=yes
+  when: not tdagent.stat.exists
+
+- name: replace td-agent group
+  replace: dest=/etc/init.d/td-agent regexp="TD_AGENT_GROUP=td-agent" replace="TD_AGENT_GROUP=root"
+  when: not tdagent.stat.exists
+
+- name: td-agent location config directory
+  file: path=/etc/td-agent/config.d state=directory owner=root group=root mode=0755
+
+- name: td-agent.conf inline adding
+  lineinfile: dest=/etc/td-agent/td-agent.conf line="include conf.d/*.conf" backup=yes
+
+- name: kpi conf upload
+  template: src=kpi-agent.conf.j2 dest=/etc/td-agent/config.d/kpi-agent.conf owner=root group=root
+
+- name: start td-agent
+  service: name=td-agent state=started enabled=yes

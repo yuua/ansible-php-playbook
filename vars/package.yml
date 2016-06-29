@@ -8,5 +8,16 @@ php_packages: [
   "php-fpm",
   "php-pear",
   "php-mysql",
-  "php-mcrypt"
+  "php-mcrypt",
+  "php-pecl-imagick",
+  "php-pecl-zip"
+]
+ruby_version: 
+  "2.2.3"
+mysql_packages: [
+  "mysql-community-server",
+  "mysql-community-client",
+  "mysql-community-common",
+  "mysql-community-libs",
+  "mysql-community-libs-compat"
 ]

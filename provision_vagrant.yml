@@ -11,3 +11,5 @@
     - composer
     - mysql
     - redis
+    - rbenv
+    - td-agent
